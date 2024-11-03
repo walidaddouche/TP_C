@@ -1,5 +1,6 @@
 #define Max 1024
 
+
 void print_prompt() {
     printf("$ ");
 }
@@ -13,8 +14,6 @@ void execution_pwd() {
     }
 }
 
-
-
 void analyse_and_execute(char *cmd) {
     cmd[strcspn(cmd, "\n")] = '\0';
     if (strcmp(cmd, "pwd") == 0) {
@@ -25,8 +24,6 @@ void analyse_and_execute(char *cmd) {
         printf("Commande introuvable : %s\n", cmd);
     }
 }
-
-
 
 int main() {
     char cmd[Max];
