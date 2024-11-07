@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
-#include "../includes/cd.h"  // Inclure le header pour la fonction cd
+#include "../../includes/cd.h"  // Inclure le header pour la fonction cd
 
 #define CWDSIZE 1024
 

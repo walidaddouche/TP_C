@@ -8,7 +8,7 @@ LDFLAGS = -lreadline
 
 # Répertoires pour les fichiers sources
 SRC_DIR = src
-CMD_DIR = Commandes_internes
+CMD_DIR = $(SRC_DIR)/Commandes_internes
 
 # Fichiers sources
 SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/prompt.c $(CMD_DIR)/exit.c $(CMD_DIR)/pwd.c $(CMD_DIR)/ftype.c $(CMD_DIR)/cd.c
