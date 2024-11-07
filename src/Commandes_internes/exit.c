@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "../includes/status.h"
+#include "../../includes/status.h"
 
 // Fonction pour gérer la commande `exit`
 void execution_exit(int *status,char *args) {

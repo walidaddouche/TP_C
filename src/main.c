@@ -11,12 +11,14 @@
 #include "../includes/pwd.h"
 #include "../includes/ftype.h"
 #include "../includes/cd.h"
+
 void analyse_and_execute(char *cmd, int *status);
 void prompt(int status);
+
 int main() {
     rl_outstream = stderr;
     char *ligne;
-    int status = 0;  // Initialisation du statut à 0 au début
+    int status = 0;  // Initialisation du statut à 0 au début (c'est la valeir de retour afficher dans le prompt)
 
     while (1) {
         prompt(status);  // Afficher le prompt avec le statut
