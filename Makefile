@@ -11,7 +11,7 @@ SRC_DIR = src
 CMD_DIR = Commandes_internes
 
 # Fichiers sources
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/prompt.c $(CMD_DIR)/exit.c $(CMD_DIR)/pwd.c $(CMD_DIR)/ftype.c
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/prompt.c $(CMD_DIR)/exit.c $(CMD_DIR)/pwd.c $(CMD_DIR)/ftype.c $(CMD_DIR)/cd.c
 
 # Fichiers objets (générés dans le répertoire src ou Commandes_internes)
 OBJS = $(SRCS:.c=.o)

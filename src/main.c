@@ -10,6 +10,7 @@
 #include "../includes/exit.h"
 #include "../includes/pwd.h"
 #include "../includes/ftype.h"
+#include "../includes/cd.h"
 void analyse_and_execute(char *cmd, int *status);
 void prompt(int status);
 int main() {
@@ -56,6 +57,14 @@ void analyse_and_execute(char *ligne, int *status) {
     else if (strncmp(ligne, "ftype", 5) == 0) {
         char *ref = ligne + 6;  // Récupérer la référence après "ftype "
         ftype(ref);  // Appeler la fonction ftype pour afficher le type du fichier
+    }
+    else if (strncmp(ligne, "cd", 2) == 0) {
+        char *path = ligne + 2;
+        while (*path == ' ') path++;  // Ignore leading spaces
+        if (*path == '\0') {
+            path = NULL;  // Si aucun argument, on va au répertoire HOME
+        }
+        execution_cd(path, status);  // Exécuter la commande cd
     }
     // Si ce n'est pas une commande interne, lancer une commande externe
     else {
