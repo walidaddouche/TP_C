@@ -12,13 +12,15 @@
 #include "../includes/ftype.h"
 #include "../includes/cd.h"
 
-void analyse_and_execute(char *cmd, int *status);
+void analyse_and_execute(char *cmd, int *status,char *previous_dir);
 void prompt(int status);
 
 int main() {
     rl_outstream = stderr;
     char *ligne;
     int status = 0;  // Initialisation du statut à 0 au début (c'est la valeir de retour afficher dans le prompt)
+    static char previous_dir[CWDSIZE] = "";
+
 
     while (1) {
         prompt(status);  // Afficher le prompt avec le statut
@@ -32,7 +34,7 @@ int main() {
 
         if (*ligne) {
             add_history(ligne);  // Ajouter à l'historique des commandes
-            analyse_and_execute(ligne,&status);  // Analyser et exécuter la commande
+            analyse_and_execute(ligne,&status,previous_dir);  // Analyser et exécuter la commande
         }
         free(ligne);
     }
@@ -41,7 +43,7 @@ int main() {
 }
 
 // Fonction d'analyse et d'exécution des commandes
-void analyse_and_execute(char *ligne, int *status) {
+void analyse_and_execute(char *ligne, int *status, char *previous_dir) {
     ligne[strcspn(ligne, "\n")] = '\0';  // Supprimer le saut de ligne
 
     // Gestion des commandes internes
@@ -60,13 +62,28 @@ void analyse_and_execute(char *ligne, int *status) {
         char *ref = ligne + 6;  // Récupérer la référence après "ftype "
         ftype(ref);  // Appeler la fonction ftype pour afficher le type du fichier
     }
+
     else if (strncmp(ligne, "cd", 2) == 0) {
+        char current_dir[CWDSIZE];
+        if (getcwd(current_dir, sizeof(current_dir)) == NULL) {
+            perror("Erreur lors de la récupération du répertoire actuel");
+            return 1; 
+        }
+
+        char *lastSlash = strrchr(current_dir, '/');
+            if (lastSlash != NULL) {
+                *lastSlash = '\0'; // Découper le chemin pour obtenir le répertoire parent
+            }
+            strncpy(previous_dir, current_dir, CWDSIZE); // Sauvegarder le répertoire parent dans previous_dir
+
+
+
         char *path = ligne + 2;
         while (*path == ' ') path++;  // Ignore leading spaces
         if (*path == '\0') {
             path = NULL;  // Si aucun argument, on va au répertoire HOME
         }
-        execution_cd(path, status);  // Exécuter la commande cd
+        cd(path, status, previous_dir); // Exécuter la commande cd
     }
     // Si ce n'est pas une commande interne, lancer une commande externe
     else {
