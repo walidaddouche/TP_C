@@ -1,6 +1,8 @@
 #ifndef CD_H
 #define CD_H
 
-void execution_cd(const char *path, int *status);
+#define CWDSIZE 1024
+
+void cd(const char *path, int *status, char *previous_dir);
 
 #endif  // CD_H
