@@ -12,6 +12,10 @@
 #include "../includes/ftype.h"
 #include "../includes/cd.h"
 
+#define MAX_ARGS 64
+
+void parse_command(char *line, char **argv);
+void execute_external(char **argv, int *status);
 void analyse_and_execute(char *cmd, int *status,char *previous_dir);
 void prompt(int status);
 
@@ -87,24 +91,44 @@ void analyse_and_execute(char *ligne, int *status, char *previous_dir) {
     }
     // Si ce n'est pas une commande interne, lancer une commande externe
     else {
-        pid_t pid = fork();
-        if (pid == 0) {  // Processus enfant
-            char *args[] = {ligne, NULL};  // Argument de la commande
-            execvp(args[0], args);  // Exécution de la commande externe
-            perror("échoue commande");  // Si execvp échoue
-            exit(1);
-        } else if (pid > 0) {  // Processus parent
-            int wstatus;
-            waitpid(pid, &wstatus, 0);  // Attendre que l'enfant se termine
-            if (WIFSIGNALED(wstatus)) {
-                *status = 128 + WTERMSIG(wstatus);  // Si le processus a été tué par un signal
-            } else {
-                *status = WEXITSTATUS(wstatus);  // Code de sortie du processus enfant
-            }
-        } else {
-            perror("Erreur lors du fork");
-            *status = 1;
+        // Gestion des commandes externes
+        char *argv[MAX_ARGS];
+        parse_command(ligne, argv);
+        if (argv[0] != NULL) {
+            execute_external(argv, status);
         }
+    }
+}
+
+// Fonction pour découper une ligne en tokens
+void parse_command(char *line, char **argv) {
+    int i = 0;
+    char *token = strtok(line, " ");
+    while (token != NULL && i < MAX_ARGS - 1) {
+        argv[i++] = token;
+        token = strtok(NULL, " ");
+    }
+    argv[i] = NULL;  // Terminez le tableau par NULL pour execvp
+}
+
+// Gérer les commandes externes
+void execute_external(char **argv, int *status) {
+    pid_t pid = fork();
+    if (pid == 0) {  
+        execvp(argv[0], argv);  // Exécution de la commande avec ses arguments
+        perror("Échec de la commande");  // Si execvp échoue
+        exit(1);
+    } else if (pid > 0) {  
+        int wstatus;
+        waitpid(pid, &wstatus, 0);  // Attendre que l'enfant se termine
+        if (WIFSIGNALED(wstatus)) {
+            *status = 128 + WTERMSIG(wstatus);  // Si le processus a été tué par un signal
+        } else {
+            *status = WEXITSTATUS(wstatus);  
+        }
+    } else {
+        perror("Erreur lors du fork");
+        *status = 1;
     }
 }
 
