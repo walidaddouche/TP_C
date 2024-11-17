@@ -11,7 +11,7 @@ void execute_command(const char *cmd_template, const char *filename) {
     system(cmd);  
 }
 
-void process_file(const char *path, const char *ext, char type, int include_hidden, const char *cmd_template) {
+void process_fichier(const char *path, const char *ext, char type, int include_hid, const char *cmd_template) {
     struct stat st;
     if (stat(path, &st) == -1) return;
     if ((type == 'f' && !S_ISREG(st.st_mode)) ||
@@ -27,22 +27,22 @@ void process_file(const char *path, const char *ext, char type, int include_hidd
     execute_command(cmd_template, path);
 }
 
-void traverse_directory(const char *dir_path, const char *ext, char type, int include_hidden, int recursive, const char *cmd_template) {
+void traverser_repertoir(const char *dir_path, const char *ext, char type, int include_hid, int recursive, const char *cmd_template) {
     DIR *dir = opendir(dir_path);
     if (!dir) return;
 
     struct dirent *entry;
     while ((entry = readdir(dir)) != NULL) {
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
-        if (!include_hidden && entry->d_name[0] == '.') continue;
+        if (!include_hid && entry->d_name[0] == '.') continue;
 
         char path[1024];
         snprintf(path, sizeof(path), "%s/%s", dir_path, entry->d_name);
 
         if (entry->d_type == DT_DIR && recursive) {
-            traverse_directory(path, ext, type, include_hidden, recursive, cmd_template);
+            traverser_repertoir(path, ext, type, include_hid, recursive, cmd_template);
         } else {
-            process_file(path, ext, type, include_hidden, cmd_template);
+            process_ficher(path, ext, type, include_hid, cmd_template);
         }
     }
     closedir(dir);
@@ -52,12 +52,12 @@ int main(int argc, char *argv[]) {
     const char *dir_path = ".";
     const char *ext = NULL;
     char type = 'f';
-    int include_hidden = 0;
+    int include_hid = 0;
     int recursive = 0;
     const char *cmd_template = "echo %s"; 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-A") == 0) {
-            include_hidden = 1;
+            include_hid = 1;
         } else if (strcmp(argv[i], "-r") == 0) {
             recursive = 1;
         } else if (strcmp(argv[i], "-e") == 0 && i + 1 < argc) {
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
             dir_path = argv[i];
         }
     }
-    traverse_directory(dir_path, ext, type, include_hidden, recursive, cmd_template);
+    traverser_repertoir(dir_path, ext, type, include_hid, recursive, cmd_template);
 
     return 0;
 }
