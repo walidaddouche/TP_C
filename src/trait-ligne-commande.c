@@ -12,7 +12,6 @@
 #include "../includes/ftype.h"
 #include "../includes/cd.h"
 #include "../includes/cmd-externes.h"
-#include "../includes/cmd-for.h"
 #define MAX_ARGS 64
 #define CWDSIZE 1024
 
@@ -30,11 +29,8 @@ void parse_command(char *line, char **argv) {
 
 void trait_ligne_commande(char *ligne, int *status, char *previous_dir) {
     ligne[strcspn(ligne, "\n")] = '\0'; 
-    if (strncmp(ligne, "for", 3) == 0) {
-        char *path=ligne+3;
-        cmd_for(path,status);
-    }
-   else if (strcmp(ligne, "exit") == 0) {
+    
+   if (strcmp(ligne, "exit") == 0) {
         execution_exit(status, NULL);
     }
     else if (strncmp(ligne, "exit ", 5) == 0) {
@@ -46,7 +42,7 @@ void trait_ligne_commande(char *ligne, int *status, char *previous_dir) {
     }
     else if (strncmp(ligne, "ftype ", 6) == 0) {
         char *ref = ligne + 6;
-        ftype(ref);
+        ftype(ref,status);
     }
     else if (strncmp(ligne, "cd", 2) == 0) {
         // Gestion de `cd`
@@ -57,8 +53,7 @@ void trait_ligne_commande(char *ligne, int *status, char *previous_dir) {
         }
         cd(path, status, previous_dir);
     }
-     else if (strncmp(ligne, "cd", 2) == 0) {
-        
+             
     else {
         // Gestion des commandes externes
         char *argv[MAX_ARGS];
