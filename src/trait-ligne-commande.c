@@ -5,18 +5,19 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
+#include <dirent.h>   // Pour opendir, readdir, closedir
+#include <sys/stat.h> // Pour stat, S_ISREG
+#include <sys/types.h> // Pour les types de données utilisés par opendir et readdir
 #include "../includes/prompt.h"
 #include "../includes/status.h"
 #include "../includes/exit.h"
 #include "../includes/pwd.h"
 #include "../includes/ftype.h"
 #include "../includes/cd.h"
+#include"../includes/commande-for.h"
 #include "../includes/cmd-externes.h"
 #define MAX_ARGS 64
-#define CWDSIZE 1024
-
-void cmd_externes(char **argv, int *status);
-
+void execute_for(const char *ligne, int *status);
 void parse_command(char *line, char **argv) {
     int i = 0;
     char *token = strtok(line, " ");
@@ -27,10 +28,12 @@ void parse_command(char *line, char **argv) {
     argv[i] = NULL;
 }
 
+// Fonction pour traiter la ligne de commande (le shell principal)
 void trait_ligne_commande(char *ligne, int *status, char *previous_dir) {
     ligne[strcspn(ligne, "\n")] = '\0'; 
     
-   if (strcmp(ligne, "exit") == 0) {
+    // Gestion des commandes classiques
+    if (strcmp(ligne, "exit") == 0) {
         execution_exit(status, NULL);
     }
     else if (strncmp(ligne, "exit ", 5) == 0) {
@@ -53,8 +56,10 @@ void trait_ligne_commande(char *ligne, int *status, char *previous_dir) {
         }
         cd(path, status, previous_dir);
     }
-             
-    else {
+     else if (strncmp(ligne, "for ", 3) == 0) {
+        execute_for(ligne,status);
+    }
+    else { 
         // Gestion des commandes externes
         char *argv[MAX_ARGS];
         parse_command(ligne, argv);
