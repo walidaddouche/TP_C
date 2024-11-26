@@ -3,4 +3,4 @@
 
 void prompt(int status);
 
-#endif // PROMPT_H
+#endif
