@@ -5,4 +5,4 @@
 
 void cd(const char *path, int *status, char *previous_dir);
 
-#endif  // CD_H
+#endif 
