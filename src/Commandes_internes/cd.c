@@ -5,39 +5,46 @@
 #include <errno.h>
 #include "../../includes/cd.h"
 
+
 void cd(const char *path, int *status, char *previous_dir) {
-    char current_dir[CWDSIZE];
-
-    if (getcwd(current_dir, sizeof(current_dir)) == NULL) {
-        fprintf(stderr, "cd: erreur lors de la récupération du répertoire actuel: %s\n", strerror(errno));
-        *status = 1;
-        return;
-    }
-
-    const char *new_dir = path;
+    const char *new_dir = NULL;
+   
 
     if (path == NULL) {
-        new_dir = getenv("HOME");
-        if (!new_dir) {
-            fprintf(stderr, "cd: HOME not set\n");
+        
+       if (getcwd(previous_dir, CWDSIZE) == NULL) {
+        perror("Erreur lors de la récupération du répertoire actuel");
+        *status = 1;
+        return;
+       }
+       new_dir = getenv("HOME");
+       if (!new_dir) {
+            perror("variable $HOME introuvable\n");
             *status = 1;
             return;
         }
-    } else if (strcmp(path, "-") == 0) {
+    } else if (strcmp(path, "-") == 0) {                                                                            
         if (previous_dir[0] == '\0') {
-            fprintf(stderr, "cd: OLDPWD not set\n");
+            perror("pas de répertoire précédent (OLDPWD non défini)\n");
             *status = 1;
             return;
         }
         new_dir = previous_dir;
+    } else {
+        if (getcwd(previous_dir, CWDSIZE) == NULL) {
+        perror("Erreur lors de la récupération du répertoire actuel");
+        *status = 1;
+        return;
+    }
+        new_dir = path;
     }
 
+   
     if (chdir(new_dir) != 0) {
-        fprintf(stderr, "cd: %s\n", strerror(errno));
+        perror("Erreur lors du changement de répertoire");
         *status = 1;
         return;
     }
 
-    strncpy(previous_dir, current_dir, CWDSIZE);
     *status = 0;
 }

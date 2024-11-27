@@ -18,7 +18,7 @@
 #include "../includes/cmd-externes.h"
 
 #define MAX_ARGS 64
-
+#define MAX_PATH_LEN 1024
 void execute_for(const char *ligne, int *status);
 void parse_command(char *line, char **argv) {
     int i = 0;
@@ -40,22 +40,66 @@ void trait_ligne_commande(char *ligne, int *status, char *previous_dir) {
         char *args = ligne + 5;
         execution_exit(status, args);
     }
-    else if (strcmp(ligne, "pwd") == 0) {
+    else if (strncmp(ligne, "pwd",3) == 0) {
+        char *ptr;
+        ptr = ligne + 3;
+        while (*ptr == ' ') ptr++;
+        if (*ptr != '\0') {
+           printf("erreur dans la syntaxe de pwd\n");
+           *status=1;
+           return;
+        }
         execution_pwd();
     }
-    else if (strncmp(ligne, "ftype ", 6) == 0) {
-        char *ref = ligne + 6;
-        ftype(ref,status);
-    }
+    else if (strncmp(ligne, "ftype", 5) == 0) {
+       char ref[MAX_PATH_LEN], *ptr;
+       int i = 0;
+       ptr = ligne + 5;
+       while (*ptr == ' ') ptr++;  
+       if (*ptr == '\0') {
+          printf("erreur dans la syntaxe de ftype : argument manquant\n");
+          *status = 1;
+          return;
+       }
+       while (*ptr != ' ' && *ptr != '\0' && i < MAX_PATH_LEN - 1) {
+          ref[i++] = *ptr++;
+       }
+       ref[i] = '\0'; 
+       while (*ptr == ' ') ptr++;
+       if (*ptr != '\0') {
+          printf("erreur dans la syntaxe de ftype : argument malformé\n");
+          *status = 1;
+          return;
+       }
+       if (i == 0) {
+          printf("erreur dans la syntaxe de ftype : référence vide\n");
+          *status = 1;
+          return;
+       }
+       ftype(ref, status);
+   }
+
     else if (strncmp(ligne, "cd", 2) == 0) {
-        char *path = ligne + 2;
-        while (*path == ' ') path++;
-        if (*path == '\0') {
-            path = NULL;
-        }
-        cd(path, status, previous_dir);
+        char ref[MAX_PATH_LEN], *ptr;
+        int i = 0;
+        ptr = ligne + 2;
+        while (*ptr == ' ') ptr++;
+        if (*ptr == '\0') {cd(NULL, status, previous_dir);}
+        else{
+           while (*ptr != ' ' && *ptr != '\0' && i < MAX_PATH_LEN - 1) {
+             ref[i++] = *ptr++;
+           }
+           ref[i] = '\0';
+           while (*ptr == ' ') ptr++;
+           if (*ptr != '\0') {
+             printf("Erreur dans la syntaxe de cd : arguments malformés\n");
+             *status = 1;
+             return;
+           }
+           cd(ref, status, previous_dir);
+       }
     }
-     else if (strncmp(ligne, "for ", 3) == 0) {
+     else if (strncmp(ligne, "for", 3) == 0) {
         execute_for(ligne,status);
     }
     else { 
