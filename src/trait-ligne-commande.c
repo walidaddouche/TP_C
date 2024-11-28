@@ -33,7 +33,7 @@ void parse_command(char *line, char **argv) {
 }
 //fonction pour traiter les lignes de commande
 void trait_ligne_commande(char *ligne, int *status, char *previous_dir) {
-    // Supprimer le retour à la ligne à la fin de la commande
+    //supprimer le retour à la ligne à la fin de la commande
     ligne[strcspn(ligne, "\n")] = '\0';
     //si l'utilisateur entre "exit", on quitte le shell
     if (strcmp(ligne, "exit") == 0) {
