@@ -10,9 +10,9 @@ void execution_exit(int *status, char *args) {
     if (args == NULL) {
         exit(*status);  // Utilise le statut actuel pour quitter
     } else {
-        // Si un argument est passé, on essaie de le convertir en nombre (long)
+        // Si un argument est passé, on essaie de le convertir en (long)
         char *cv_arg;  // Pointeur pour vérifier si tout l'argument a été converti
-        long exit_status = strtol(args, &cv_arg, 10);  // Convertit l'argument en nombre (base 10)
+        long exit_status = strtol(args, &cv_arg, 10);  // Convertir l'argument en nombre (base 10)
 
         // Si l'argument ne correspond pas à un nombre entier valide, on affiche une erreur
         if (*cv_arg != '\0') {
@@ -27,6 +27,6 @@ void execution_exit(int *status, char *args) {
         }
 
         // Si tout est valide, on quitte avec le code de statut spécifié
-        exit((int)exit_status);  // Convertit exit_status en entier et quitte avec ce code
+        exit((int)exit_status);  // Convertir exit_status en entier et quitter avec ce code
     }
 }
