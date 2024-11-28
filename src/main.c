@@ -10,7 +10,7 @@
 #include"../includes/exit.h"
 #include"../includes/trait-ligne-commande.h"
 
-#define CWDSIZE 1024// taille max du chemin courant 
+#define CWDSIZE 1024//taille max du chemin courant 
 void prompt(int status);
 void trait_ligne_commande(char *ligne, int *status, char *previous_dir);
 
@@ -37,7 +37,7 @@ int main() {
         free(ligne);//liberer la mémoir alouer pour la ligne de commande 
     }
 
-    return 0;// pour indiquer la fin du programe avec succés
+    return 0;//pour indiquer la fin du programe avec succés
 }
 
 

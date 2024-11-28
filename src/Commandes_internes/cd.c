@@ -11,13 +11,13 @@ void cd(const char *path, int *status, char *previous_dir) {
    
     //commande "cd" seule sans argument
     if (path == NULL) {
-       // Sauvegarde du répertoire actuel dans 'previous_dir' avant de changer de répertoire
+       //sauvegarde du répertoire actuel dans 'previous_dir' avant de changer de répertoire
        if (getcwd(previous_dir, CWDSIZE) == NULL) {
         perror("Erreur lors de la récupération du répertoire actuel");
         *status = 1;
         return;
        }
-       // Utilisation de la variable d'environnement HOME comme répertoire cible
+       //utilisation de la variable d'environnement HOME comme répertoire cible
        new_dir = getenv("HOME");
        if (!new_dir) {
             perror("variable $HOME introuvable\n");
@@ -25,14 +25,14 @@ void cd(const char *path, int *status, char *previous_dir) {
             return;
         }
     } else if (strcmp(path, "-") == 0) {                                                                            
-        if (previous_dir[0] == '\0') {// Si 'previous_dir' est vide, cela signifie que on n'a pas exécuté une commande cd avant
+        if (previous_dir[0] == '\0') {//si 'previous_dir' est vide, cela signifie que on n'a pas exécuté une commande cd avant
             perror("pas de répertoire précédent (OLDPWD non défini)\n");
             *status = 1;
             return;
         }
-        new_dir = previous_dir;// Le répertoire cible est le répertoire où nous étions avant d'exécuter la commande cd avec/sans argument
-    } else {// Sinon, un chemin spécifique est fourni
-         // Sauvegarde du répertoire actuel dans 'previous_dir' avant de changer de répertoire
+        new_dir = previous_dir;//le répertoire cible est le répertoire où nous étions avant d'exécuter la commande cd avec/sans argument
+    } else {//sinon, un chemin spécifique est fourni
+         //sauvegarde du répertoire actuel dans 'previous_dir' avant de changer de répertoire
         if (getcwd(previous_dir, CWDSIZE) == NULL) {
         perror("Erreur lors de la récupération du répertoire actuel");
         *status = 1;
@@ -47,6 +47,6 @@ void cd(const char *path, int *status, char *previous_dir) {
         *status = 1;
         return;
     }
-    // Si tout se passe bien, le statut est mis à 0 pour indiquer un succès
+    //si tout se passe bien, le statut est mis à 0 pour indiquer un succès
     *status = 0;
 }
