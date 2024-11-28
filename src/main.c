@@ -9,9 +9,11 @@
 #include "../includes/status.h"
 #include"../includes/exit.h"
 #include"../includes/trait-ligne-commande.h"
+
 #define CWDSIZE 1024
 void prompt(int status);
 void trait_ligne_commande(char *ligne, int *status, char *previous_dir);
+
 int main() {
     rl_outstream = stderr;
     char *ligne;
