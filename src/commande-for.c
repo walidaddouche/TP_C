@@ -58,7 +58,6 @@ void execute_for(const char *ligne, int *status) {
     }
     ptr += 2;
     while (*ptr == ' ') ptr++;
-
     char rep[MAX_PATH_LEN];
     i = 0;
     while (*ptr != ' ' && *ptr != '{' && *ptr != '\0') {
@@ -75,7 +74,6 @@ void execute_for(const char *ligne, int *status) {
     }
     ptr++;
     while (*ptr == ' ') ptr++;
-
     char command_template[256];
     i = 0;
     while (*ptr != '}' && *ptr != '\0') {
@@ -84,7 +82,7 @@ void execute_for(const char *ligne, int *status) {
     command_template[i] = '\0';
 
     if (*ptr != '}') {
-        fprintf(stderr, "Erreur : syntaxe invalide, '}' attendu.\n");
+         fprintf(stderr, "Erreur : syntaxe invalide, '}' attendu.\n");
         *status = 1;
         return;
     }

@@ -19,7 +19,7 @@
 #include "../includes/cmd-externes.h"
 
 #define MAX_ARGS 64
-
+#define MAX_PATH_LEN 1024
 void execute_for(const char *ligne, int *status);
 
 void parse_command(char *line, char **argv) {
