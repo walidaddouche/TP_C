@@ -9,6 +9,8 @@
 
 #define MAX_PATH_LEN 1024
 #define MAX_ARGS 256
+void traverser_repertoire(const char *dir_path, const char *cmd_template, const char *variable, int *status);
+void trait_ligne_commande(const char *command, int *status, void *extra_args); 
 
 int contient_dollar_F(const char *template) {
     return strstr(template, "$F") != NULL;
@@ -51,8 +53,9 @@ void execute_for(const char *ligne, int *status) {
 
     while (*ptr == ' ') ptr++;
 
-    if (strncmp(ptr, "in", 2) != 0) {
-        fprintf(stderr, "Erreur : syntaxe invalide, 'in' attendu.\n");
+    while (*ptr == ' ') ptr++;
+    if (strncmp(ptr, "in", 2) != 0 || *(ptr + 2) != ' ') {
+        fprintf(stderr, "Erreur : syntaxe invalide, un espace est attendu avant et après 'in'.\n");
         *status = 1;
         return;
     }
@@ -67,8 +70,8 @@ void execute_for(const char *ligne, int *status) {
 
     while (*ptr == ' ') ptr++;
 
-    if (*ptr != '{') {
-        fprintf(stderr, "Erreur : syntaxe invalide, '{' attendu.\n");
+    if (*ptr != '{' || *(ptr - 1) != ' ') {
+        fprintf(stderr, "Erreur : syntaxe invalide, un espace est attendu avant '{'.\n");
         *status = 1;
         return;
     }
