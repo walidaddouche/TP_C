@@ -5,12 +5,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
-#include "../includes/prompt.h"
-#include "../includes/status.h"
-#include "../includes/exit.h"
-#include "../includes/pwd.h"
-#include "../includes/ftype.h"
-#include "../includes/cd.h"
+#include "../../../includes/prompt.h"
+#include "../../../includes/status.h"
+#include "../../../includes/exit.h"
+#include "../../../includes/pwd.h"
+#include "../../../includes/ftype.h"
+#include "../../../includes/cd.h"
 
 #define MAX_ARGS 64
 

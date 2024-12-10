@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include "../includes/ftype.h"
+#include "../../../includes/ftype.h"
 
 #define MAX_PATH_LEN 1024
 #define MAX_ARGS 256

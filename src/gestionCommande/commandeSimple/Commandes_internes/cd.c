@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
-#include "../../includes/cd.h"
+#include "../../../../includes/cd.h"
 
 
 void cd(const char *path, int *status, char *previous_dir) {
