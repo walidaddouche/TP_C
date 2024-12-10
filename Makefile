@@ -15,6 +15,7 @@ CMD_INT_DIR = $(CMD_SMP_DIR)/Commandes_internes
 
 # Fichiers sources
 SRCS = $(CMD_STR_DIR)/commande-for.c \
+	   $(CMD_STR_DIR)/commande_consecutive.c \
        $(SRC_DIR)/main.c \
        $(SRC_DIR)/trait-ligne-commande.c \
        $(CMD_SMP_DIR)/cmd-externes.c \
