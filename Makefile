@@ -8,15 +8,26 @@ LDFLAGS = -lreadline
 
 # Répertoires pour les fichiers sources
 SRC_DIR = src
-CMD_DIR = $(SRC_DIR)/Commandes_internes
+CMD_DIR = $(SRC_DIR)/gestionCommande
+CMD_SMP_DIR = $(CMD_DIR)/commandeSimple
+CMD_STR_DIR = $(CMD_DIR)/commandeStructure
+CMD_INT_DIR = $(CMD_SMP_DIR)/Commandes_internes
 
 # Fichiers sources
-SRCS = $(SRC_DIR)/commande-for.c $(SRC_DIR)/main.c $(SRC_DIR)/trait-ligne-commande.c  $(SRC_DIR)/cmd-externes.c $(SRC_DIR)/prompt.c $(CMD_DIR)/exit.c $(CMD_DIR)/pwd.c $(CMD_DIR)/ftype.c $(CMD_DIR)/cd.c
+SRCS = $(CMD_STR_DIR)/commande-for.c \
+       $(SRC_DIR)/main.c \
+       $(SRC_DIR)/trait-ligne-commande.c \
+       $(CMD_SMP_DIR)/cmd-externes.c \
+       $(SRC_DIR)/prompt.c \
+       $(CMD_INT_DIR)/exit.c \
+       $(CMD_INT_DIR)/pwd.c \
+       $(CMD_INT_DIR)/ftype.c \
+       $(CMD_INT_DIR)/cd.c
 
-# Fichiers objets (générés dans le répertoire src ou Commandes_internes)
-OBJS = $(SRCS:.c=.o)
+# Fichiers objets (dans obj/)
+OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-# Répertoires où les objets seront générés
+# Répertoire des fichiers objets
 OBJ_DIR = obj
 
 # Règle par défaut pour construire l'exécutable
@@ -24,24 +35,20 @@ all: $(TARGET)
 
 # Construction de l'exécutable
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-# Création du répertoire obj s'il n'existe pas
-$(OBJ_DIR):
-	mkdir $(OBJ_DIR)
-
-# Compilation des fichiers objets pour src/
+# Compilation des fichiers objets
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	mkdir -p $(dir $@)  # Crée les sous-répertoires nécessaires dans obj/
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Compilation des fichiers objets pour Commandes_internes/
-$(OBJ_DIR)/%.o: $(CMD_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+# Création du répertoire obj
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 # Nettoyage des fichiers objets et de l'exécutable
 clean:
-	rm -f $(OBJS) $(TARGET)
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR) $(TARGET)
 
 # Exécuter le shell
 run: $(TARGET)
