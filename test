@@ -8,6 +8,7 @@ fi
 
 AUTOTEST_GIT="https://moule.informatique.univ-paris-diderot.fr/geoffroy/sy5-2024-2025-projet-fsh-autotests.git"
 AUTOTEST_DIR=".sy5-2024-2025-projet-fsh-autotests.nosync"
+for D in dir-1 { ./append R $D ; for F in $D { ./append R $F } }
 
 function file_ends_on_line_start() {
     [ ! -s "$1" -o $(tail -c 1 "$1" | wc -l) -gt 0 ]
